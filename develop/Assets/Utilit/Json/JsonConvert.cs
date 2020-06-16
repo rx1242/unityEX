@@ -4,7 +4,7 @@ using UnityEngine;
 using System.IO;
 using System;
 using System.Text;
-
+using UnityEditor;
 public class JsonConvert
 {
     public static string ToJson(object obj)
@@ -26,7 +26,7 @@ public class JsonConvert
         string tex = Encoding.UTF8.GetString(dgram);
         return FromJson<T>(tex);
     }
-    public static void SaveFile<T>(string filePath, object obj)
+    public static void SaveFile(string filePath, object obj)
     {
         using (FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write))
         {
@@ -34,6 +34,11 @@ public class JsonConvert
             {
                 sw.WriteLine(ToJson(obj));
             }
+        }
+
+        if (filePath.Contains((Application.dataPath)))
+        {
+            AssetDatabase.Refresh();
         }
     }
     public static object LoadFile<T>(string filePath)
